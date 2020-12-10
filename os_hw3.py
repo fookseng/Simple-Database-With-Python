@@ -115,7 +115,7 @@ def GET(key):
         check_locat = search_key(key)
         if check_locat == None:
             #print("Data not found!")
-            f = open(str(output_file_name) + ".output.txt", "a")
+            f = open(str(output_file_name) + ".output", "a")
             if not beginning:
                 f.write("EMPTY")
                 f.close()
@@ -128,7 +128,7 @@ def GET(key):
             read_data = json.load(json_file)
             json_file.close()
             x = read_data.get(key, 'EMPTY')
-            f = open(str(output_file_name) + ".output.txt", "a")
+            f = open(str(output_file_name) + ".output", "a")
             if not beginning:
                 f.write(x)
                 f.close()
@@ -137,7 +137,7 @@ def GET(key):
                 f.write('\n' + x)
                 f.close()
     else:
-        f = open(str(output_file_name) + ".output.txt", "a")
+        f = open(str(output_file_name) + ".output", "a")
         if not beginning:
             f.write(x)
             f.close()
@@ -158,7 +158,7 @@ def SCAN(key1, key2):
             check_locat = search_key(str(i))
             if check_locat == None:
                 # print("Data not found!")
-                f = open(str(output_file_name) + ".output.txt", "a")
+                f = open(str(output_file_name) + ".output", "a")
                 if not beginning:
                     f.write("EMPTY")
                     f.close()
@@ -171,7 +171,7 @@ def SCAN(key1, key2):
                 read_data = json.load(json_file)
                 json_file.close()
                 x = read_data.get(str(i), 'EMPTY')
-                f = open(str(output_file_name) + ".output.txt", "a")
+                f = open(str(output_file_name) + ".output", "a")
                 if not beginning:
                     f.write(x)
                     f.close()
@@ -180,7 +180,7 @@ def SCAN(key1, key2):
                     f.write('\n' + x)
                     f.close()
         else:
-            f = open(str(output_file_name) + ".output.txt", "a")
+            f = open(str(output_file_name) + ".output", "a")
             if not beginning:
                 f.write(x)
                 f.close()

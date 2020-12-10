@@ -51,6 +51,7 @@ filesize = 2147483648 # 2 Gb
 #filesize = 27
 eof = 0
 eof_flag = 0
+beginning = 0
 
 f = open("./storage/index.txt", "r")
 file_counter = f.read()
@@ -106,6 +107,7 @@ def PUT(key, value):
 def GET(key):
     global dict
     global output_file_name
+    global beginning
     check_locat = 0
 
     x = dict.get(key, "NO")
@@ -114,24 +116,40 @@ def GET(key):
         if check_locat == None:
             #print("Data not found!")
             f = open(str(output_file_name) + ".output.txt", "a")
-            f.write("EMPTY" + '\n')
-            f.close()
+            if not beginning:
+                f.write("EMPTY")
+                f.close()
+                beginning += 1
+            else:
+                f.write('\n'+"EMPTY")
+                f.close()
         else:
             json_file = open('./storage/' + str(check_locat) + '.db.txt', 'r')
             read_data = json.load(json_file)
             json_file.close()
             x = read_data.get(key, 'EMPTY')
             f = open(str(output_file_name) + ".output.txt", "a")
-            f.write(x + '\n')
-            f.close()
+            if not beginning:
+                f.write(x)
+                f.close()
+                beginning += 1
+            else:
+                f.write('\n' + x)
+                f.close()
     else:
         f = open(str(output_file_name) + ".output.txt", "a")
-        f.write(x + '\n')
-        f.close()
+        if not beginning:
+            f.write(x)
+            f.close()
+            beginning += 1
+        else:
+            f.write('\n' + x)
+            f.close()
 
 def SCAN(key1, key2):
     global dict
     global output_file_name
+    global beginning
     check_locat = 0
 
     for i in range(int(key1), int(key2)+1):
@@ -141,20 +159,35 @@ def SCAN(key1, key2):
             if check_locat == None:
                 # print("Data not found!")
                 f = open(str(output_file_name) + ".output.txt", "a")
-                f.write("EMPTY" + '\n')
-                f.close()
+                if not beginning:
+                    f.write("EMPTY")
+                    f.close()
+                    beginning += 1
+                else:
+                    f.write('\n' + "EMPTY")
+                    f.close()
             else:
                 json_file = open('./storage/' + str(check_locat) + '.db.txt', 'r')
                 read_data = json.load(json_file)
                 json_file.close()
                 x = read_data.get(str(i), 'EMPTY')
                 f = open(str(output_file_name) + ".output.txt", "a")
-                f.write(x + '\n')
-                f.close()
+                if not beginning:
+                    f.write(x)
+                    f.close()
+                    beginning += 1
+                else:
+                    f.write('\n' + x)
+                    f.close()
         else:
             f = open(str(output_file_name) + ".output.txt", "a")
-            f.write(x + '\n')
-            f.close()
+            if not beginning:
+                f.write(x)
+                f.close()
+                beginning += 1
+            else:
+                f.write('\n' + x)
+                f.close()
 
 def search_key(input):
     temp_list = []

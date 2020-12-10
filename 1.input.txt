@@ -1,0 +1,23 @@
+PUT 3 first
+GET 3
+PUT 8 second
+PUT 7 third
+PUT 5 fourth
+PUT 14 second
+GET 8
+GET 44
+GET 7
+PUT 17 third
+PUT 15 fourth
+SCAN 3 7
+PUT 3 fffirst
+PUT 8 sond
+PUT 7 hird
+PUT 5 ourth
+PUT 14 econd
+PUT 17 hird
+PUT 15 ourth
+SCAN 3 9
+PUT 15 fourth
+PUT 14 second
+PUT 44 TEST

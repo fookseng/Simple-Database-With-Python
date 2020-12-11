@@ -2,7 +2,7 @@ import os
 import json
 import argparse
 import sys
-
+import time
 
 ################################### VARIABLES DECLARATIONS ###################################################
 ap = argparse.ArgumentParser()

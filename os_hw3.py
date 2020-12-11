@@ -1,3 +1,11 @@
+# import difflib
+# with open('3j.output') as f1:
+#     f1_text = f1.read()
+# with open('3.output') as f2:
+#     f2_text = f2.read()
+# # Find and print the diff:
+# for line in difflib.unified_diff(f1_text, f2_text, fromfile='file1', tofile='file2', lineterm=''):
+#     print(line)
 import os
 import json
 import argparse
@@ -47,11 +55,14 @@ dict = {}
 search_dict = {}
 file_counter = 0
 list = []
-filesize = 50870912 # 0.5 Gb
+filesize = 27 # 0.5 Gb
 #filesize = 27
 eof = 0
 eof_flag = 0
 beginning = 0
+db_beginning = 0
+eofc = 0
+
 
 f = open("./storage/index.txt", "r")
 file_counter = f.read()
@@ -66,8 +77,9 @@ def PUT(key, value):
     global search_dict
     global filesize
     global eof_flag
+    global db_beginning
+    global eofc
 
-    print(key, value)
     check_exist = 0
     # check if current data exist in db
     check_exist = search_key(key)
@@ -80,11 +92,40 @@ def PUT(key, value):
         if key not in list:
             list.append(key)
         # update db
-        with open("./storage/" + str(file_counter) + '.db.txt', 'w') as outfile:
-            json.dump(dict, outfile)
+        if not db_beginning:
+            #print("1")
+            with open("./storage/" + str(file_counter) + '.db.txt', 'a') as f:
+                f.write("{")
+                f.write("\"")
+                f.write(key)
+                f.write("\"")
+                f.write(":")
+                f.write("\"")
+                f.write(value)
+                f.write("\"")
+                f.write("}")
+                #json.dump(dict, outfile)
+                db_beginning =+ 1
+            #print("begin" + key +"    "+ value)
+        else:
+            #print("2")
+            f = open("./storage/" + str(file_counter) + '.db.txt', 'ab');
+            f.seek(-1, os.SEEK_END)
+            f.truncate()
+            with open("./storage/" + str(file_counter) + '.db.txt', 'a') as f:
+                f.write(",")
+                f.write("\"")
+                f.write(key)
+                f.write("\"")
+                f.write(":")
+                f.write("\"")
+                f.write(value)
+                f.write("\"")
+                f.write("}")
+            #print("AFTER" + key +"    "+ value)
         # check if db is full
-        if os.path.getsize('./storage/' + str(file_counter) + '.db.txt') > filesize or eof_flag:
-            #print("FULL")
+        if os.path.getsize('./storage/' + str(file_counter) + '.db.txt') >= filesize or eof_flag:
+            #CLOSE CURRENT DATABASE
             search_dict.update({file_counter: list})
             with open('./storage/db_search.txt') as f:
                 db_data = json.load(f)
@@ -95,6 +136,7 @@ def PUT(key, value):
             dict.clear()
             search_dict.clear()
             file_counter += 1
+            db_beginning = 0
     else:
         #print("YES")
         json_file = open('./storage/'+str(check_exist)+'.db.txt', 'r')
@@ -236,6 +278,7 @@ for line in Lines:
 end = time.time()
 total_time = end - start
 print("Total run time: " + str(total_time))
+
 if eof_flag and list:
     search_dict.update({file_counter: list})
     with open('./storage/db_search.txt') as f:

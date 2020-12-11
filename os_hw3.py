@@ -47,7 +47,7 @@ dict = {}
 search_dict = {}
 file_counter = 0
 list = []
-filesize = 536870912 # 0.5 Gb
+filesize = 50870912 # 0.5 Gb
 #filesize = 27
 eof = 0
 eof_flag = 0
@@ -67,6 +67,7 @@ def PUT(key, value):
     global filesize
     global eof_flag
 
+    print(key, value)
     check_exist = 0
     # check if current data exist in db
     check_exist = search_key(key)
@@ -215,7 +216,7 @@ def search_key(input):
 input_file = open(input_file_path, 'r')
 Lines = input_file.readlines()
 #print(len(Lines))
-
+start = time.time()
 for line in Lines:
     #print(line)
     temp = line.split()
@@ -232,6 +233,9 @@ for line in Lines:
     else:
         print("ERROR")
 #print(search_key("17"))
+end = time.time()
+total_time = end - start
+print("Total run time: " + str(total_time))
 if eof_flag and list:
     search_dict.update({file_counter: list})
     with open('./storage/db_search.txt') as f:

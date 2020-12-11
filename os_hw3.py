@@ -55,8 +55,8 @@ dict = {}
 search_dict = {}
 file_counter = 0
 list = []
-filesize = 27 # 0.5 Gb
-#filesize = 27
+filesize = 524288000 # 0.5 Gb
+#filesize = 10 # 0.5 Gb
 eof = 0
 eof_flag = 0
 beginning = 0
@@ -91,38 +91,48 @@ def PUT(key, value):
         dict.update({key: value})
         if key not in list:
             list.append(key)
-        # update db
-        if not db_beginning:
-            #print("1")
-            with open("./storage/" + str(file_counter) + '.db.txt', 'a') as f:
-                f.write("{")
-                f.write("\"")
-                f.write(key)
-                f.write("\"")
-                f.write(":")
-                f.write("\"")
-                f.write(value)
-                f.write("\"")
-                f.write("}")
-                #json.dump(dict, outfile)
-                db_beginning =+ 1
-            #print("begin" + key +"    "+ value)
+            if not db_beginning:
+                # print("1")
+                with open("./storage/" + str(file_counter) + '.db.txt', 'a') as f:
+                    f.write("{")
+                    f.write("\"")
+                    f.write(key)
+                    f.write("\"")
+                    f.write(":")
+                    f.write("\"")
+                    f.write(value)
+                    f.write("\"")
+                    f.write("}")
+                    # json.dump(dict, outfile)
+                    db_beginning = + 1
+                # print("begin" + key +"    "+ value)
+            else:
+                # print("2")
+                f = open("./storage/" + str(file_counter) + '.db.txt', 'ab');
+                f.seek(-1, os.SEEK_END)
+                f.truncate()
+                with open("./storage/" + str(file_counter) + '.db.txt', 'a') as f:
+                    f.write(",")
+                    f.write("\"")
+                    f.write(key)
+                    f.write("\"")
+                    f.write(":")
+                    f.write("\"")
+                    f.write(value)
+                    f.write("\"")
+                    f.write("}")
+                # print("AFTER" + key +"    "+ value)
         else:
-            #print("2")
-            f = open("./storage/" + str(file_counter) + '.db.txt', 'ab');
-            f.seek(-1, os.SEEK_END)
-            f.truncate()
-            with open("./storage/" + str(file_counter) + '.db.txt', 'a') as f:
-                f.write(",")
-                f.write("\"")
-                f.write(key)
-                f.write("\"")
-                f.write(":")
-                f.write("\"")
-                f.write(value)
-                f.write("\"")
-                f.write("}")
-            #print("AFTER" + key +"    "+ value)
+            # key in list, update current db
+            json_file = open('./storage/' + str(file_counter) + '.db.txt', 'r')
+            update_data = json.load(json_file)
+            json_file.close()
+            update_data[key] = value
+            json_file = open('./storage/' + str(file_counter) + '.db.txt', 'w')
+            json.dump(update_data, json_file)
+            json_file.close()
+        # update db
+
         # check if db is full
         if os.path.getsize('./storage/' + str(file_counter) + '.db.txt') >= filesize or eof_flag:
             #CLOSE CURRENT DATABASE
@@ -139,6 +149,7 @@ def PUT(key, value):
             db_beginning = 0
     else:
         #print("YES")
+        #print(key, value)
         json_file = open('./storage/'+str(check_exist)+'.db.txt', 'r')
         update_data = json.load(json_file)
         json_file.close()

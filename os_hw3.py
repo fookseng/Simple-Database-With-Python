@@ -55,7 +55,7 @@ dict = {}
 search_dict = {}
 file_counter = 0
 list = []
-filesize = 524288000 # 0.5 Gb
+filesize = 5428800 # 0.5 Gb
 #filesize = 10 # 0.5 Gb
 eof = 0
 eof_flag = 0
@@ -90,19 +90,12 @@ def PUT(key, value):
         # add data to dict and list
         dict.update({key: value})
         if key not in list:
+            #print("add")
             list.append(key)
             if not db_beginning:
                 # print("1")
                 with open("./storage/" + str(file_counter) + '.db.txt', 'a') as f:
-                    f.write("{")
-                    f.write("\"")
-                    f.write(key)
-                    f.write("\"")
-                    f.write(":")
-                    f.write("\"")
-                    f.write(value)
-                    f.write("\"")
-                    f.write("}")
+                    f.write("{" + "\"" + key + "\"" + ":" + "\"" + value + "\"" + "}")
                     # json.dump(dict, outfile)
                     db_beginning = + 1
                 # print("begin" + key +"    "+ value)
@@ -112,17 +105,10 @@ def PUT(key, value):
                 f.seek(-1, os.SEEK_END)
                 f.truncate()
                 with open("./storage/" + str(file_counter) + '.db.txt', 'a') as f:
-                    f.write(",")
-                    f.write("\"")
-                    f.write(key)
-                    f.write("\"")
-                    f.write(":")
-                    f.write("\"")
-                    f.write(value)
-                    f.write("\"")
-                    f.write("}")
+                    f.write("," + "\"" + key + "\"" + ":" + "\"" + value + "\"" + "}")
                 # print("AFTER" + key +"    "+ value)
         else:
+            #print("update")
             # key in list, update current db
             json_file = open('./storage/' + str(file_counter) + '.db.txt', 'r')
             update_data = json.load(json_file)
@@ -150,6 +136,7 @@ def PUT(key, value):
     else:
         #print("YES")
         #print(key, value)
+        #print("update2")
         json_file = open('./storage/'+str(check_exist)+'.db.txt', 'r')
         update_data = json.load(json_file)
         json_file.close()
@@ -268,10 +255,12 @@ def search_key(input):
 # Using readlines()
 input_file = open(input_file_path, 'r')
 Lines = input_file.readlines()
+count = 1
 #print(len(Lines))
 start = time.time()
 for line in Lines:
-    #print(line)
+    #print(count)
+    count += 1
     temp = line.split()
     eof += 1
     #print(temp)

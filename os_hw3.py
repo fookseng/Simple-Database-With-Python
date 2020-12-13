@@ -44,7 +44,7 @@ if not os.path.exists('./storage/index.txt'):
 input_file_path = args["input"]
 #print(input_file_path)
 
-output_file_name = input_file_path.split('\\')
+output_file_name = input_file_path.split('/')
 #print(output_file_name)
 output_file_name = output_file_name[-1].split('.')
 #print(output_file_name)
